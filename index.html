@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Dark Theme</title>
+    <style>
+      /*
+      nice intro to contrast
+      https://css-tricks.com/understanding-web-accessibility-color-contrast-guidelines-and-ratios/
+
+      dark mode example
+      https://github.com/ditdot-dev/dark-mode-example
+      */
+
+      body {
+        background: #fff;
+        font: 100% system-ui;
+      }
+
+      h1,
+      p {
+        color: #222;
+      }
+
+      /* Could use a media query to detect system settings
+        e.g.
+        @media (prefers-color-scheme: dark) {
+          body {
+            color: #eee;
+            background: #121212;
+          }
+
+          body a {
+            color: #809fff;
+          }
+        }
+      */
+
+      /* By manually theme-ing */
+      body.dark-theme {
+        background: #121212;
+      }
+      body.dark-theme h1,
+      body.dark-theme h2,
+      body.dark-theme p {
+        color: #eee;
+      }
+      body.dark-theme a {
+        color: #809fff;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Dark Theme</h1>
+    <p>This is some text.</p>
+ 
+    <h2>Using System Setting</h2>
+    <p>Manually enable dark mode by detecting system settings <button id="darkThemeSystem">enable system theme</button></p>
+
+    <h2>Manual Setting</h2>
+    <p>Another way is to add manually add/remove a dark theme <button id="darkThemeTheme">enable dark theme</button></p>
+
+    <h2>Inverting Colours For Fun</h2>
+    <p>A quick solution that is terrible for performance (esp large pages and scrolling) and assumes a traditional-ish color scheme (not already dark) is to invert the colors <button id="darkThemeInvert">weee invert colours</button></p>
+
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+
+        const darkThemeSystemEl = document.getElementById("darkThemeSystem");
+        darkThemeSystemEl.addEventListener("click", function() {
+          const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+          if (prefersDarkScheme.matches) {
+            document.body.classList.add("dark-theme");
+            this.textContent = "system theme enabled for dark-theme";
+          } else {
+            document.body.classList.remove("dark-theme");
+            this.textContent = "system theme is not set dark-theme";
+          }
+        });
+
+        const darkThemeThemeEl = document.getElementById("darkThemeTheme");
+        darkThemeThemeEl.addEventListener("click", function() {
+          document.body.classList.toggle("dark-theme");
+          const darkThemeOn = document.body.classList.contains("dark-theme");
+          if (darkThemeOn) {
+            this.textContent = "disable dark theme";
+          } else {
+            this.textContent = "enable dark theme";
+          }
+        });
+
+        const darkThemeInvertEl = document.getElementById("darkThemeInvert");
+        let darkThemeInvered = false;
+        darkThemeInvertEl.addEventListener("click", function() {
+          // Or fancier: html { filter: invert(1) contrast(0.95) saturate(0.5) hue-rotate(180deg);
+          if (!darkThemeInvered) {
+            darkThemeInvered = true;
+            this.textContent = "undo wee";
+            document.querySelector("html").style.filter = "invert(1)";
+          } else {
+            darkThemeInvered = false;
+            this.textContent = "weee invert colours";
+            document.querySelector("html").style.filter = "invert(0)";
+          }
+
+        });
+      });
+    </script>
+  </body>
+</html>
